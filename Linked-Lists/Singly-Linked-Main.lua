@@ -23,8 +23,8 @@ local function IterateLinkedList(List) -- List : Linked List
 	end
 end
 
-local function UpdateTail(LinkedList)
-	LinkedList.Tail = LinkedList.Tail and LinkedList.Tail.NextNode or LinkedList.NextNode
+local function UpdateTail(LinkedList) -- LinkedList : Linked List
+	LinkedList.Tail = LinkedList.Tail and LinkedList.Tail.NextNode or LinkedList.Tail or LinkedList.NextNode
 end
 
 function LinkedLists.New(Value, ...) -- Value : Any Variable
@@ -32,7 +32,7 @@ function LinkedLists.New(Value, ...) -- Value : Any Variable
 	local LinkedList =  setmetatable({
 		["Length"] = 0
 	}, LinkedLists)
-	
+		
 	if Value then
 		LinkedList:Create(Value, ...)
 	end
@@ -55,25 +55,44 @@ function LinkedLists:Create(Value, ...) -- Value : Any Variable
 	self.NextNode = ValueOfNode
 	self.Length = self.Length + 1
 	self.NodeAdded:Fire(ValueOfNode)
-	
 	UpdateTail(self)
 	if ... then
 		RepeatedAppend({...}, self)
 	end
 end
 
-function LinkedLists:Append(Value, ...) -- Value : Any Variable
+function LinkedLists:Insert(Index, Value) -- Value : Any Variable | Index : number
 	
-	local last = self.NextNode
-	for Table, Value in IterateLinkedList(self) do
-		last = Table
+	Value = type(Index) == "number" and Value
+	Index = Index >= 1 and Index < self.Length and Index
+	if not Index or not Value then error("Improper Argument recieved", Value) end
+	
+	local Node = {
+		["Value"] = Value
+	}
+	
+	local LastNode = self
+	
+	for Count = 1, Index do
+		
+		LastNode = LastNode.NextNode or error("Node not found")
+		
+		if Count == Index then
+			
+			local NodeInFront = LastNode.NextNode
+			LastNode.NextNode = Node
+			Node.NextNode = NodeInFront
+			
+		end
 	end
-	
+end
+function LinkedLists:Append(Value, ...) -- Value : Any Variable
+		
 	local ValueOfNode = {
 		["Value"] = Value
 	}
 	
-	last.NextNode = ValueOfNode
+	self.Tail.NextNode = ValueOfNode
 	self.Length = self.Length + 1
 	self.NodeAdded:Fire(ValueOfNode)
 	UpdateTail(self)
@@ -107,9 +126,9 @@ function LinkedLists:Remove(Index) -- Index : number
 	
 end
 
-function LinkedLists:Peek(Index)
+function LinkedLists:Peek(Index) -- Index : number
 	
-	local Index = type(Index) == "number" and Index or error()
+	local Index = type(Index) == "number" and Index 
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local Node = self
