@@ -78,12 +78,8 @@ function LinkedLists:Append(Value, ...)
 end
 
 function LinkedLists:Remove(Index) -- Index : number or string
-	
-	local TypeOfIndex = type(Index)
-	local IsNumber = TypeOfIndex == "number"
-	local IsString = TypeOfIndex == "string"
-	local Index = IsNumber and Index or IsString and string.lower(Index) == "head"  and 1 or IsString and string.lower(Index) == "tail" and self.Length
-	if self.Length < Index or not Index then warn("Improper argument sent") return end
+
+	if self.Length < Index then warn("Improper argument sent") return end
 	
 	local LastNode, CurrentNode = self, self
 	
