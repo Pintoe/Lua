@@ -61,6 +61,26 @@ function LinkedLists:Create(Value, ...) -- Value : Any Variable
 	end
 end
 
+function LinkedLists:Find(Element) -- Element : Node | Value
+	
+	local IsNode = type(Element) == "table"
+	local I
+	
+	if IsNode then
+		for Node, Value, Count in IterateLinkedList(self) do
+			if Node == Element then
+				return Count, Node
+			end
+		end
+	else
+		for Node, Value, Count in IterateLinkedList(self) do
+			if Value == Element then
+				return Count, Node
+			end
+		end
+	end
+end
+
 function LinkedLists:Insert(Index, Value) -- Value : Any Variable | Index : number
 	
 	Value = type(Index) == "number" and Value
@@ -72,10 +92,10 @@ function LinkedLists:Insert(Index, Value) -- Value : Any Variable | Index : numb
 	}
 	
 	local LastNode = self
-	
+	local CurrentNode = self
 	for Count = 1, Index do
 		
-		LastNode = LastNode.NextNode or error("Node not found")
+		CurrentNode = CurrentNode.NextNode or error("Node not found")
 		
 		if Count == Index then
 			
@@ -84,6 +104,8 @@ function LinkedLists:Insert(Index, Value) -- Value : Any Variable | Index : numb
 			Node.NextNode = NodeInFront
 			
 		end
+		
+		LastNode = CurrentNode
 	end
 end
 function LinkedLists:Append(Value, ...) -- Value : Any Variable
