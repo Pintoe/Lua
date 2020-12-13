@@ -42,9 +42,7 @@ function LinkedLists.New(Value, ...) --:New( Value : Any Value )
 		["Length"] = 0
 	}, LinkedLists)
 		
-	if Value then
-		LinkedList:Create(Value, ...)
-	end
+	if Value then LinkedList:Create(Value, ...) end
 	
 	return LinkedList
 	
@@ -53,8 +51,7 @@ end
 function LinkedLists:Create(Value, ...) -- :Create( Value : Any Value, ... : Any Values )
 	
 	if self.NextNode then
-		warn("Don't run LinkedList:Create() on a linked list with a head") 
-		return self:Append(...)
+		return warn("Don't run LinkedList:Create() on a linked list with a head") and self:Append(...)
 	end
 	
 	local ValueOfNode = {
@@ -75,7 +72,7 @@ function LinkedLists:Find(Element) -- :Find( Element : Value | Node )
 	local IsNode = type(Element) == "table"
 	
 	if IsNode then
-		for Node, Value, Count in IterateLinkedList(self) do
+		for Node, _, Count in IterateLinkedList(self) do
 			if Node == Element then
 				return Count, Node
 			end
@@ -99,8 +96,8 @@ function LinkedLists:Insert(Index, Value) -- :Insert( Index : Integer, Value: An
 		["Value"] = Value
 	}
 	
-	local LastNode = self
-	local CurrentNode = self
+	local LastNode, CurrentNode = self, self
+	
 	for Count = 1, Index do
 		
 		CurrentNode = CurrentNode.NextNode or error("Node not found")
@@ -143,7 +140,7 @@ function LinkedLists:Remove(Index) -- :Remove( Index : Integer )
 		
 		CurrentNode = CurrentNode.NextNode or error("Node not found")
 
-		if Count == 0 then
+		if Count == Index then
 			
 			LastNode.NextNode = CurrentNode.NextNode
 			CurrentNode = nil
@@ -164,7 +161,7 @@ function LinkedLists:Peek(Index) -- :Peek( Index : Integer )
 	
 	local Node = self
 	for i = 1, Index do
-		Node = Node.NextNode
+		Node = Node.NextNode or warn("Node not fouond")
 		if i == Index then
 			break
 		end
