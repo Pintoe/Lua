@@ -25,7 +25,7 @@
 	
 	There are a couple of handy methods; :Find( Element : Node | Value ), :Insert( Index : Integer, Value : Any Value ).
 	
-	Some of the essentail methods include; .New( Value : Any Value | nil ) :Create( Value : Any Value, ... : Any Values | Nil )
+	Some of the essential methods include; .New( Value : Any Value | nil ) :Create( Value : Any Value, ... : Any Values | Nil )
 	:Remove( Index : Integer ), and :Peek( Index : Integer )
 	
 	And lastly, there are a few auxiliary functions, they include : GetHead(  ) and GetTail(  )
