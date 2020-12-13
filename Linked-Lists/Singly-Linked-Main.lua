@@ -45,8 +45,20 @@ local function RepeatedAppend(Values, LinkedList) -- RepeatedAppend( Values : Ta
 	end
 end
 
-local function IterateLinkedList(List) -- IterateLinkedList( List : Linked List )
-	local CurrentNode = List
+local function ReturnTail(LinkedList) -- ReturnTail( LinkedList : Linked List )
+	local Last
+	for Node in LinkedList:Iterate() do
+		Last = Node
+	end
+	return Last
+end
+
+local function UpdateTail(LinkedList) -- UpdateTail( LinkedList : Linked List )
+	LinkedList.Tail = ( LinkedList.Tail and LinkedList.Tail.NextNode ) or LinkedList.Tail or ReturnTail(LinkedList)
+end
+
+function LinkedLists:Iterate() -- :Iterate( )
+	local CurrentNode = self
 	local Index = 0
 	local Value
 	return function()
@@ -55,18 +67,6 @@ local function IterateLinkedList(List) -- IterateLinkedList( List : Linked List 
 		Value = ( CurrentNode and CurrentNode.Value )
 		return CurrentNode, Value, Index
 	end
-end
-
-local function ReturnTail(LinkedList) -- ReturnTail( LinkedList : Linked List )
-	local Last
-	for Node in IterateLinkedList(LinkedList) do
-		Last = Node
-	end
-	return Last
-end
-
-local function UpdateTail(LinkedList) -- UpdateTail( LinkedList : Linked List )
-	LinkedList.Tail = ( LinkedList.Tail and LinkedList.Tail.NextNode ) or LinkedList.Tail or ReturnTail(LinkedList)
 end
 
 function LinkedLists.New(Value, ...) --:New( Value : Any Value )
@@ -102,16 +102,16 @@ end
 
 function LinkedLists:Find(Element) -- :Find( Element : Value | Node )
 	
-	local IsNode = type(Element) == "table"
+	local IsNode = type(Element) == "table" and Element.Value 
 	
 	if IsNode then
-		for Node, _, Count in IterateLinkedList(self) do
+		for Node, _, Count in self:Iterate() do
 			if Node == Element then
 				return Count, Node
 			end
 		end
 	else
-		for Node, Value, Count in IterateLinkedList(self) do
+		for Node, Value, Count in self:Iterate() do
 			if Value == Element then
 				return Count, Node
 			end
@@ -202,15 +202,13 @@ function LinkedLists:Peek(Index) -- :Peek( Index : Integer )
 	return Node
 end
 
-function LinkedLists:GetHead()
+function LinkedLists:GetHead() -- :GetHead( ) 
 	return self.NextNode	
 end
 
-function LinkedLists:GetTail()
+function LinkedLists:GetTail() -- :GetTail( )
 	return self.Tail
 end
-
-LinkedLists.Iterate = IterateLinkedList
 
 return LinkedLists
 
