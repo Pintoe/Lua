@@ -1,3 +1,36 @@
+--[[
+
+	Welcome, this is a simple to use linked list module made by onedar/Pintoe. Credit is appreciated but not needed.
+	 
+	Basic Usage : 
+	
+	local LinkedListModule = require(path)
+	
+	local NewLinked = LinkedListModule.New("This is the head node value") -- Creates a new linked list, if the value is given, it is a head node
+	NewLinked:Append("This is the second value")
+	NewLinked:Append("This is the tail value")
+	
+	for Node, Value, Count in NewLinked.Iterate(NewList) do
+		print(Node, Value, Count)
+	end
+	
+	Summary : 
+	
+	This module utilizes Varaiadic function, allowing you to call method with multiple arguments, example:
+	
+	NewLinked:Append("Hello", "Hi", "How are you doing")
+	
+	It is not required for you to supply arguments to the LinkedListModuke.New() method, but it is preferred. If you do not supply,
+	then you must run a :Create(Value) onto the returned linked list object to create a head node
+	
+	There are a couple of handy methods; :Find( Element : Node | Value ), :Insert( Index : Integer, Value : Any Value ).
+	
+	Some of the essentail methods include; .New( Value : Any Value | nil ) :Create( Value : Any Value, ... : Any Values | Nil )
+	:Remove( Index : Integer ), and :Peek( Index : Integer )
+	
+	And lastly, there are a few auxiliary functions, they include : GetHead(  ) and GetTail(  )
+]]
+
 local LinkedLists = {}
 
 local Bindable = Instance.new("BindableEvent")
