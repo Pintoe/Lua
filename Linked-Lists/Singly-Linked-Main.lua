@@ -20,7 +20,7 @@
 	
 	NewLinked:Append("Hello", "Hi", "How are you doing")
 	
-	It is not required for you to supply arguments to the LinkedListModuke.New() method, but it is preferred. If you do not supply,
+	It is not required for you to supply arguments to the .New() method, but it is preferred. If you do not supply,
 	then you must run a :Create(Value) onto the returned linked list object to create a head node
 	
 	There are a couple of handy methods; :Find( Element : Node | Value ), :Insert( Index : Integer, Value : Any Value ).
