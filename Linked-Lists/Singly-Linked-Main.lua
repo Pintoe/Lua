@@ -6,28 +6,37 @@ LinkedLists.NodeAdded = Bindable
 
 LinkedLists.__index = LinkedLists
 
-local function RepeatedAppend(Values, LinkedList) -- Values : Table of values to be added, LinkedList : Linked List
+local function RepeatedAppend(Values, LinkedList) -- RepeatedAppend( Values : Table of values, LinkedList : Linked List )
 	for _, v in ipairs(Values) do
 		LinkedList:Append(v)
 	end
 end
 
-local function IterateLinkedList(List) -- List : Linked List
+local function IterateLinkedList(List) -- IterateLinkedList( List : Linked List )
 	local CurrentNode = List
 	local Index = 0
+	local Value
 	return function()
 		Index = Index + 1
 		CurrentNode = CurrentNode.NextNode
-		local Value = CurrentNode and CurrentNode.Value
+		Value = ( CurrentNode and CurrentNode.Value )
 		return CurrentNode, Value, Index
 	end
 end
 
-local function UpdateTail(LinkedList) -- LinkedList : Linked List
-	LinkedList.Tail = LinkedList.Tail and LinkedList.Tail.NextNode or LinkedList.Tail or LinkedList.NextNode
+local function ReturnTail(LinkedList) -- ReturnTail( LinkedList : Linked List )
+	local Last
+	for Node in IterateLinkedList(LinkedList) do
+		Last = Node
+	end
+	return Last
 end
 
-function LinkedLists.New(Value, ...) -- Value : Any Variable
+local function UpdateTail(LinkedList) -- UpdateTail( LinkedList : Linked List )
+	LinkedList.Tail = ( LinkedList.Tail and LinkedList.Tail.NextNode ) or LinkedList.Tail or ReturnTail(LinkedList)
+end
+
+function LinkedLists.New(Value, ...) -- New( Value : Any Value )
 	
 	local LinkedList =  setmetatable({
 		["Length"] = 0
@@ -41,7 +50,7 @@ function LinkedLists.New(Value, ...) -- Value : Any Variable
 	
 end
 
-function LinkedLists:Create(Value, ...) -- Value : Any Variable
+function LinkedLists:Create(Value, ...) -- Create( Value : Any Value, ... : Any Values )
 	
 	if self.NextNode then
 		warn("Don't run LinkedList:Create() on a linked list with a head") 
@@ -56,15 +65,14 @@ function LinkedLists:Create(Value, ...) -- Value : Any Variable
 	self.Length = self.Length + 1
 	self.NodeAdded:Fire(ValueOfNode)
 	UpdateTail(self)
-	if ... then
-		RepeatedAppend({...}, self)
-	end
+	
+	if ... then RepeatedAppend({...}, self) end
+	
 end
 
-function LinkedLists:Find(Element) -- Element : Node | Value
+function LinkedLists:Find(Element) -- LinkedLists( Element : Value | Node )
 	
 	local IsNode = type(Element) == "table"
-	local I
 	
 	if IsNode then
 		for Node, Value, Count in IterateLinkedList(self) do
@@ -81,10 +89,10 @@ function LinkedLists:Find(Element) -- Element : Node | Value
 	end
 end
 
-function LinkedLists:Insert(Index, Value) -- Value : Any Variable | Index : number
+function LinkedLists:Insert(Index, Value) -- LinkedLists( Index : Integer, Value: Any Value )
 	
-	Value = type(Index) == "number" and Value
-	Index = Index >= 1 and Index < self.Length and Index
+	Value = ( type(Index) == "number" and Value )
+	Index = ( Index >= 1 and Index < self.Length and Index )
 	if not Index or not Value then error("Improper Argument recieved", Value) end
 	
 	local Node = {
@@ -102,13 +110,15 @@ function LinkedLists:Insert(Index, Value) -- Value : Any Variable | Index : numb
 			local NodeInFront = LastNode.NextNode
 			LastNode.NextNode = Node
 			Node.NextNode = NodeInFront
-			
+
 		end
 		
 		LastNode = CurrentNode
 	end
+	self.Length = self.Length + 1
+	UpdateTail(self)
 end
-function LinkedLists:Append(Value, ...) -- Value : Any Variable
+function LinkedLists:Append(Value, ...) -- LinkedLists( Value : Any Value, ... : Any Values )
 		
 	local ValueOfNode = {
 		["Value"] = Value
@@ -119,14 +129,12 @@ function LinkedLists:Append(Value, ...) -- Value : Any Variable
 	self.NodeAdded:Fire(ValueOfNode)
 	UpdateTail(self)
 	
-	if ... then
-		return RepeatedAppend({...}, self)
-	end
+	if ... then return RepeatedAppend({...}, self) end
 end
 
-function LinkedLists:Remove(Index) -- Index : number 
+function LinkedLists:Remove(Index) -- Remove( Index : Integer )
 	
-	local Index = type(Index) == "number" and Index or error()
+	local Index = ( type(Index) == "number" and Index ) or error()
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local LastNode, CurrentNode = self, self
@@ -145,18 +153,19 @@ function LinkedLists:Remove(Index) -- Index : number
 		
 		LastNode = CurrentNode
 	end
-	
+	UpdateTail(self)
+	self.Length = self.Length - 1
 end
 
-function LinkedLists:Peek(Index) -- Index : number
+function LinkedLists:Peek(Index) -- Peek( Index : Integer )
 	
-	local Index = type(Index) == "number" and Index 
+	local Index = ( type(Index) == "number" and Index )
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local Node = self
 	for i = 1, Index do
 		Node = Node.NextNode
-		if i == 0 then
+		if i == Index then
 			break
 		end
 	end
@@ -170,6 +179,8 @@ end
 function LinkedLists:GetTail()
 	return self.Tail
 end
+
 LinkedLists.Iterate = IterateLinkedList
+
 return LinkedLists
 
