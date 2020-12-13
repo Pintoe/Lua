@@ -164,7 +164,7 @@ end
 
 function LinkedLists:Remove(Index) -- :Remove( Index : Integer )
 	
-	local Index = ( type(Index) == "number" and Index ) or error()
+	local Index = ( type(Index) == "number" and Index ) or error("Index has to be a number")
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local LastNode, CurrentNode = self, self
