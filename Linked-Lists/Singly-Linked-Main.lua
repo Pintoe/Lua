@@ -36,7 +36,7 @@ local function UpdateTail(LinkedList) -- UpdateTail( LinkedList : Linked List )
 	LinkedList.Tail = ( LinkedList.Tail and LinkedList.Tail.NextNode ) or LinkedList.Tail or ReturnTail(LinkedList)
 end
 
-function LinkedLists.New(Value, ...) -- New( Value : Any Value )
+function LinkedLists.New(Value, ...) --:New( Value : Any Value )
 	
 	local LinkedList =  setmetatable({
 		["Length"] = 0
@@ -50,7 +50,7 @@ function LinkedLists.New(Value, ...) -- New( Value : Any Value )
 	
 end
 
-function LinkedLists:Create(Value, ...) -- Create( Value : Any Value, ... : Any Values )
+function LinkedLists:Create(Value, ...) -- :Create( Value : Any Value, ... : Any Values )
 	
 	if self.NextNode then
 		warn("Don't run LinkedList:Create() on a linked list with a head") 
@@ -70,7 +70,7 @@ function LinkedLists:Create(Value, ...) -- Create( Value : Any Value, ... : Any 
 	
 end
 
-function LinkedLists:Find(Element) -- LinkedLists( Element : Value | Node )
+function LinkedLists:Find(Element) -- :Find( Element : Value | Node )
 	
 	local IsNode = type(Element) == "table"
 	
@@ -89,7 +89,7 @@ function LinkedLists:Find(Element) -- LinkedLists( Element : Value | Node )
 	end
 end
 
-function LinkedLists:Insert(Index, Value) -- LinkedLists( Index : Integer, Value: Any Value )
+function LinkedLists:Insert(Index, Value) -- :Insert( Index : Integer, Value: Any Value )
 	
 	Value = ( type(Index) == "number" and Value )
 	Index = ( Index >= 1 and Index < self.Length and Index )
@@ -118,7 +118,7 @@ function LinkedLists:Insert(Index, Value) -- LinkedLists( Index : Integer, Value
 	self.Length = self.Length + 1
 	UpdateTail(self)
 end
-function LinkedLists:Append(Value, ...) -- LinkedLists( Value : Any Value, ... : Any Values )
+function LinkedLists:Append(Value, ...) -- :Append( Value : Any Value, ... : Any Values )
 		
 	local ValueOfNode = {
 		["Value"] = Value
@@ -132,7 +132,7 @@ function LinkedLists:Append(Value, ...) -- LinkedLists( Value : Any Value, ... :
 	if ... then return RepeatedAppend({...}, self) end
 end
 
-function LinkedLists:Remove(Index) -- Remove( Index : Integer )
+function LinkedLists:Remove(Index) -- :Remove( Index : Integer )
 	
 	local Index = ( type(Index) == "number" and Index ) or error()
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
@@ -157,7 +157,7 @@ function LinkedLists:Remove(Index) -- Remove( Index : Integer )
 	self.Length = self.Length - 1
 end
 
-function LinkedLists:Peek(Index) -- Peek( Index : Integer )
+function LinkedLists:Peek(Index) -- :Peek( Index : Integer )
 	
 	local Index = ( type(Index) == "number" and Index )
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
