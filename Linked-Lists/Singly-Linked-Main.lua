@@ -33,9 +33,7 @@
 
 local LinkedLists = {}
 
-local Bindable = Instance.new("BindableEvent")
-Bindable.Name = "NodeAdded"
-LinkedLists.NodeAdded = Bindable
+LinkedLists.NodeAdded = Instance.new("BindableEvent")
 
 LinkedLists.__index = LinkedLists
 
@@ -84,7 +82,7 @@ end
 function LinkedLists:Create(Value, ...) -- :Create( Value : Any Value, ... : Any Values )
 	
 	if self.NextNode then
-		return warn("Don't run LinkedList:Create() on a linked list with a head") and self:Append(...)
+		return warn("Don't run LinkedList:Create() on a linked list with a head") or self:Append(...)
 	end
 	
 	local ValueOfNode = {
@@ -164,7 +162,7 @@ end
 
 function LinkedLists:Remove(Index) -- :Remove( Index : Integer )
 	
-	local Index = ( type(Index) == "number" and Index ) or error("Index has to be a number")
+	Index = ( type(Index) == "number" and Index ) or error("Index has to be a number")
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local LastNode, CurrentNode = self, self
@@ -189,7 +187,7 @@ end
 
 function LinkedLists:Peek(Index) -- :Peek( Index : Integer )
 	
-	local Index = ( type(Index) == "number" and Index )
+	Index = ( type(Index) == "number" and Index )
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local Node = self
