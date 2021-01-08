@@ -32,7 +32,6 @@
 ]]
 
 local LinkedLists = {}
-
 LinkedLists.NodeAdded = Instance.new("BindableEvent")
 
 LinkedLists.__index = LinkedLists
@@ -82,7 +81,7 @@ end
 function LinkedLists:Create(Value, ...) -- :Create( Value : Any Value, ... : Any Values )
 	
 	if self.NextNode then
-		return warn("Don't run LinkedList:Create() on a linked list with a head") or self:Append(...)
+		return warn("Don't run LinkedList:Create() on a linked list with a head") and self:Append(...)
 	end
 	
 	local ValueOfNode = {
@@ -146,6 +145,7 @@ function LinkedLists:Insert(Index, Value) -- :Insert( Index : Integer, Value: An
 	self.Length = self.Length + 1
 	UpdateTail(self)
 end
+
 function LinkedLists:Append(Value, ...) -- :Append( Value : Any Value, ... : Any Values )
 		
 	local ValueOfNode = {
@@ -162,7 +162,7 @@ end
 
 function LinkedLists:Remove(Index) -- :Remove( Index : Integer )
 	
-	Index = ( type(Index) == "number" and Index ) or error("Index has to be a number")
+	local Index = ( type(Index) == "number" and Index ) or error("Index has to be a number")
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local LastNode, CurrentNode = self, self
@@ -187,7 +187,7 @@ end
 
 function LinkedLists:Peek(Index) -- :Peek( Index : Integer )
 	
-	Index = ( type(Index) == "number" and Index )
+	local Index = ( type(Index) == "number" and Index )
 	if self.Length < Index or not Index then warn("Improper argument sent") return end
 	
 	local Node = self
@@ -196,8 +196,26 @@ function LinkedLists:Peek(Index) -- :Peek( Index : Integer )
 		if i == Index then
 			break
 		end
-	end
+	end		
 	return Node
+end
+
+function LinkedLists:Reverse() -- :Reverse( )
+	
+	local Current, Last = self.NextNode, nil
+	local Next
+	
+	self.NextNode, self.Tail = self.Tail, Current
+	
+	while Current do
+
+		Next = Current.NextNode
+		Current.NextNode = Last
+		Last = Current
+		Current = Next
+		self.NextNode = Last
+	end
+
 end
 
 function LinkedLists:GetHead() -- :GetHead( ) 
